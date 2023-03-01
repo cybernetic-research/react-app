@@ -9,6 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v2
       - name: cache node_modules
         uses: actions/cache@v1
@@ -44,6 +45,12 @@ jobs:
         with:
           name: build
           path: build
+
+      - name: ZIP assets
+        if: github.event_name == 'push' && github.ref == 'refs/head/master'
+        run: |
+          zip -r build.zip ./build
+          zip -r coverage.zip ./coverage
 
       - name: Create a release
         if: github.event_name == 'push' && github.ref == 'refs/head/master'
